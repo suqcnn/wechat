@@ -88,9 +88,13 @@ func ImageHandler(w http.ResponseWriter, r *mp.Request) {
 	if get_err == nil && get_bool && user.LastMsgType == MSGTYPE_REG_HEADPIC_TEXT {
 		user.HeadUrl = image.PicURL
 		user.LastMsgType = MSGTYPE_REG_HEADPIC_IMG
-		tip_content, err = user.UploadHeadPic()
+
+		err = user.UploadHeadPic()
 		if err != nil {
+			tip_content = "上传头像失败！"
 			log.Println(err)
+		}else{
+			tip_content = "上传图片成功！"
 		}
 	} else {
 

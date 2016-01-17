@@ -7,15 +7,6 @@ import (
 
 var Orm *xorm.Engine
 
-type User struct {
-	UserID      string `json:"userid" xorm:"PK 'userid'"`
-	LastMsgType string `json:"lastmsgtype" xorm:"'lastmsgtype'"`
-}
-
-func (u *User) TableName() string {
-	return "user"
-}
-
 func InitDB(dbtype string, dataSourceName string, objs ...interface{}) error {
 
 	var err error

@@ -10,7 +10,24 @@ import (
 
 //var AccessTokenServer *mp.DefaultAccessTokenServer
 
-func (config *Configure) Start() error {
+func (config *Configure) Listen() error {
+	err := http.ListenAndServe(":"+strconv.Itoa(config.Port), nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (config *Configure) InitWechatAndListen() error {
+	err := config.InitWechat()
+	if err != nil {
+		return err
+	}
+
+	return config.Listen()
+}
+
+func (config *Configure) InitWechat() error {
 	aesKey, err := util.AESKeyDecode(config.EncodingAESKey)
 	if err != nil {
 		return err
@@ -45,10 +62,5 @@ func (config *Configure) Start() error {
 		http.Handle(config.UrlBase, mpServerFrontend)
 	}
 
-	err = http.ListenAndServe(":"+strconv.Itoa(config.Port), nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return config.Listen()
 }

@@ -14,6 +14,7 @@ const (
 	MATCHTYPE_EQUAL  = "EQUAL"
 	MATCHTYPE_REGEXP = "REGEXP"
 	MATCHTYPE_CONTEX = "CONTEX"
+	MAX_RETRY_TIMES  = 2
 )
 
 type Helper struct {
@@ -83,7 +84,15 @@ func (h *HandleBean) MatchContext(matched_status string) bool {
 	}
 
 	if user.LastMsgType == matched_status {
-		return true
+		if user.Tally <= MAX_RETRY_TIMES {
+			user.IncTally()
+			return true
+		} else {
+			user.LastMsgType = MSGTYPE_NULL
+			user.Tally = 0
+			user.SaveStatus()
+			return false
+		}
 	} else {
 		return false
 	}
@@ -120,4 +129,17 @@ func (h *HandleBean) do(operate interface{}, operargs ...interface{}) (interface
 func Register(m_type, m_value string, operate interface{}, operargs ...interface{}) {
 	log.Println(operargs)
 	GHelpers = append(GHelpers, Helper{m_type, m_value, operate, operargs})
+}
+
+func SaveUserStatus(hb *HandleBean, tip string) (string, error) {
+	user := &User{
+		UserID:      hb.UserID,
+		LastMsgType: hb.Content,
+	}
+	save_err := user.SaveStatus()
+	if save_err != nil {
+		return "操作信息存储失败！", save_err
+	}
+
+	return tip, nil
 }
