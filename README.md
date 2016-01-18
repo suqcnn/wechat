@@ -40,17 +40,17 @@ if err != nil {
 
 ## 自定义扩展业务
 使用场景包括：
-- `指定`文本消息的处理(MATCHTYPE_EQUAL)
+### `指定`文本消息的处理(MATCHTYPE_EQUAL)
 ```go
 wechat.Register(wechat.MATCHTYPE_EQUAL, "公交卡余额", TransCardQueryHandler)
 ```
 
-- 以指定文本为`前缀`的处理(MATCHTYPE_PREFIX)
+### 以指定文本为`前缀`的处理(MATCHTYPE_PREFIX)
 ```go
 wechat.Register(wechat.MATCHTYPE_PREFIX, "姓名@", RegNameHandler)
 ```
 
-- `上下文`的处理(MATCHTYPE_PREFIX)
+### `上下文`的处理(MATCHTYPE_PREFIX)
 以用户签到场景为例：
 然后再输入用户名/密码，验证码完成绑定操作。
 1. 用户输入“绑定”
